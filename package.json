@@ -1,7 +1,6 @@
 {
   "name": "Bamazon",
   "version": "1.0.0",
-  "description": "",
   "main": "bamazonCustomer.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -19,7 +18,9 @@
   "homepage": "https://github.com/marktvbui/Bamazon#readme",
   "dependencies": {
     "inquire": "^0.4.8",
-    "inquirer": "^3.2.0"
+    "inquirer": "^3.2.0",
+    "mysql": "^2.13.0"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "description": ""
 }

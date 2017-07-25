@@ -22,10 +22,6 @@ connection.connect(function(err) {
   start();
 });
 
-   // * View Product Sales by Department
-   
-   // * Create New Department
-
 function start(){
   connection.query('SELECT * FROM products', function(err, results) {
     if (err) throw err;
@@ -57,10 +53,32 @@ function start(){
 }
 
 function createDepartment() {
-  console.log('create department works\n');
-  start();
+  inquirer.prompt([
+    {
+      name: 'departmentName',
+      type: 'input',
+      message: 'Please enter the new department name:'
+    },
+    {
+      name: 'overHeadCost',
+      type: 'input',
+      validate: function(value){
+        return !isNaN(value);
+      },
+      message: 'What is the over head cost of this department?'
+    }
+  ]).then(function(answer){
+    connection.query('INSERT INTO departments SET ?', {
+      department_name: answer.departmentName,
+      over_head_cost: answer.overHeadCost
+    }, function(err, res) {
+      console.log(res.affectedRows + ' new department created \n');
+      start();
+    })
+  })
 }
 
+   // * View Product Sales by Department
 function departmentSales() {
   console.log('department sales is working\n');
   start();

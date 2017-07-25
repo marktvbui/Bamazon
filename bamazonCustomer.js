@@ -54,9 +54,8 @@ function start() {
             chosenItem = results[i];
           }
         }
-        if (parseInt(answer.quantity) < chosenItem.stock_quantity) {
+        if (parseInt(answer.quantity) <= chosenItem.stock_quantity) {
           var newQuantity = chosenItem.stock_quantity - parseInt(answer.quantity);
-          console.log(newQuantity);
           connection.query('UPDATE products SET ? WHERE ?',
             [
               {
@@ -73,7 +72,6 @@ function start() {
         }
         else {
           console.log('Sorry we currently do not have that many stock of ' + chosenItem.name);
-          return false;
           start();
         }
       })
@@ -117,6 +115,6 @@ function start() {
         //   var purchaseQuantity = user.quantity;
         //   checkOrder(purchaseId, purchaseQuantity);
         // }
-    })
+    // })
 
-}
+// }

@@ -22,15 +22,13 @@ connection.connect(function(err) {
   start();
 });
 
-  // * If a manager selects `Add to Inventory`, your app should display a prompt that will let the manager "add more" of any item currently in the store.
-
 function start(){
   inquirer.prompt
   ([
     {
       name: 'menu',
       type: 'list',
-      choices: ['Current Products', 'View Low Inventory', 'Add to Inventory', 'Add New Product', 'Exit'],
+      choices: ['Current Products', 'View Low Inventory', 'Add to Inventory', 'Add New Product', 'Delete Product', 'Exit'],
       message: 'Sir, what report would you like to access?'
     }
   ])
@@ -50,6 +48,10 @@ function start(){
 
       case 'Add New Product':
         newProducts();
+        break;
+
+      case 'Delete Product':
+        deleteProduct();
         break;
 
       case 'Exit':
@@ -169,3 +171,43 @@ function newProducts() {
       )
     })
 }
+
+function deleteProduct() {
+  connection.query('SELECT * FROM products', function(err, results) {
+    if (err) throw err;
+    inquirer.prompt([
+      {
+        name: 'name',
+        type: 'list',
+        choices: function() {
+          var deleteArray = [];
+          for (var i = 0; i < results.length; i++) {
+            deleteArray.push(results[i].name);
+          }
+          return deleteArray;
+        },
+        message: 'What item do we no longer sell?'
+      }
+    ])
+    .then(function(answer){
+      var pickedProduct;
+      for (var i = 0; i < results.length; i++) {
+        if (results[i].name === answer.name) {
+          pickedProduct = results[i];
+        }
+      }
+      connection.query('DELETE FROM products WHERE ?',
+        [{
+          id: pickedProduct.id
+        }], function(error) {
+          if (error) throw error;
+          console.log('Item will no longer be sold!');
+          start();
+        }
+      )
+    })
+  })
+}
+
+
+

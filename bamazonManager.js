@@ -109,8 +109,17 @@ function newProducts() {
       type: 'input',
       message: 'How much inventory do we have?'
     }
-    ]).then(function(results){
-      console.log(results);
-      start();
+    ]).then(function(results) {
+      connection.query("INSERT INTO products SET ?",
+        {
+          name: results.name,
+          department: results.department,
+          price: results.price,
+          inventory: results.inventory
+        }, function(err, res) {
+          console.log(res.affectedRows + ' new product inserted' + '\n');
+          start();
+        }
+      )
     })
 }

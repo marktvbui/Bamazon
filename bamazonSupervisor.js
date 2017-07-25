@@ -78,7 +78,7 @@ function createDepartment() {
   })
 }
 
-   // * View Product Sales by Department
+   // * View Product Sales by Department, for each loop, adding product sales first then display total
 function departmentSales() {
   console.log('department sales is working\n');
   start();

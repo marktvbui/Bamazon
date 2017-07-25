@@ -65,7 +65,7 @@ function start() {
           itemPrice = chosenItem.price;
           purchasePrice = purchaseQuantity * chosenItem.price;
           sales = chosenItem.product_sales + purchasePrice;
-
+          // ***** can currently only save one attribute
           connection.query('UPDATE products SET ? WHERE ?',
             [
               // {

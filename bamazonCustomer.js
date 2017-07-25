@@ -49,27 +49,36 @@ function start() {
     ])
     .then(function(answer){
         var chosenItem;
+        var purchaseQuantity;
+        var newQuantity;
+        var itemPrice;
+        var purchasePrice;
+        var sales;
         for (var i = 0; i < results.length; i++) {
           if (results[i].name === answer.name) {
             chosenItem = results[i];
           }
         }
         if (parseInt(answer.quantity) <= chosenItem.inventory) {
-          var purchaseQuantity = answer.quantity;
-          var newQuantity = chosenItem.inventory - parseInt(purchaseQuantity);
-          var itemPrice = chosenItem.price;
+          purchaseQuantity = answer.quantity;
+          newQuantity = chosenItem.inventory - parseInt(purchaseQuantity);
+          itemPrice = chosenItem.price;
+          purchasePrice = purchaseQuantity * chosenItem.price;
+          sales = chosenItem.product_sales + purchasePrice;
+
           connection.query('UPDATE products SET ? WHERE ?',
             [
-              {
-                inventory: newQuantity
-              },
+              // {
+              //   inventory: newQuantity
+              // },
+
               {
                 id: chosenItem.id
               }
             ], function(error) {
               if (error) throw error;
-              var purchasePrice = purchaseQuantity * chosenItem.price;
               console.log('Today\'s total comes to $' + purchasePrice);
+              start();
             });
         }
         else {

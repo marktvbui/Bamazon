@@ -36,13 +36,57 @@ function start(){
     {
       name: 'menu',
       type: 'list',
-      choices: ['Current Products', 'View Low Inventory', 'Add to Inventory', 'Add New Product'],
+      choices: ['Current Products', 'View Low Inventory', 'Add to Inventory', 'Add New Product', 'Exit'],
       message: 'Sir, what report would you like to access?'
     }
-  ]).then(function(answer){
-      console.log(answer);
-      })
+  ])
+  .then(function(answer){
+    switch (answer.menu) {
+      case 'Current Products':
+        currentProducts();
+        break;
+
+      case 'View Low Inventory':
+        lowInventory();
+        break;
+
+      case 'Add to Inventory':
+        addInventory();
+        break;
+
+      case 'Add New Product':
+        newProducts();
+        break;
+
+      case 'Exit':
+        console.log('Good Bye');
+        connection.end();
+        break;
+    }
+  })
 }
 
+function currentProducts() {
+  connection.query('SELECT * FROM products', function(err, results) {
+    if (err) throw err;
+    for (var i = 0; i < results.length; i++) {
+      console.log('\nproduct id: ' + results[i].id + ' | ' + 'product name: ' + results[i].name + ' | ' + 'department: ' + results[i].department + ' | ' + 'price $' + results[i].price + ' | ' + 'inventory: ' + results[i].stock_quantity);
+    }
+  })
+  start();
+}
 
+function lowInventory() {
+  console.log('low inventory');
+  start();
+}
 
+function addInventory() {
+  console.log('add inventory');
+  start();
+}
+
+function newProducts() {
+  console.log('new products');
+  start();
+}

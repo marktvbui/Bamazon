@@ -55,7 +55,9 @@ function start() {
           }
         }
         if (parseInt(answer.quantity) <= chosenItem.stock_quantity) {
-          var newQuantity = chosenItem.stock_quantity - parseInt(answer.quantity);
+          var purchaseQuantity = answer.quantity;
+          var newQuantity = chosenItem.stock_quantity - parseInt(purchaseQuantity);
+          var itemPrice = chosenItem.price;
           connection.query('UPDATE products SET ? WHERE ?',
             [
               {
@@ -66,8 +68,8 @@ function start() {
               }
             ], function(error) {
               if (error) throw err;
-              console.log('Purchase successful!');
-              start();
+              var purchasePrice = purchaseQuantity * chosenItem.price;
+              console.log('Today\'s total comes to $' + purchasePrice);
             });
         }
         else {
@@ -77,44 +79,3 @@ function start() {
       })
   })
 }
-
-
-
-// function prompt(itemArray) {
-//   inquirer.prompt([
-//     {
-//       name: 'id',
-//       type: 'rawlist',
-//       message: 'What is the id of the item you wish to buy?',
-//       validate: function(value) {
-//         if (!isNaN(value) && (!value)) {
-//           if (value > itemArray) {
-//           console.log('\nthat item does not exist, please try another');
-//           return false;
-//           }
-//         return true;
-//         }
-//         return false;
-//       }
-//     },
-//     {
-//       type: 'input',
-//       name: 'quantity',
-//       message: 'How many would you like to buy?',
-//       validate: function(value) {
-//         if (!isNaN(value) && (!value)) {
-//           return true;
-//         }
-//         return false;
-//       }
-//     }
-//     ]).then(function(user){
-//           console.log('The item you wish to buy is item # ' + user.id);
-//           console.log('Quantity of: ' + user.quantity);
-        //   var purchaseId = user.id;
-        //   var purchaseQuantity = user.quantity;
-        //   checkOrder(purchaseId, purchaseQuantity);
-        // }
-    // })
-
-// }

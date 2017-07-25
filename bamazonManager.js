@@ -22,10 +22,6 @@ connection.connect(function(err) {
   start();
 });
 
-  // * If a manager selects `View Products for Sale`, the app should list every available item: the item IDs, names, prices, and quantities.
-
-  // * If a manager selects `View Low Inventory`, then it should list all items with an inventory count lower than five.
-
   // * If a manager selects `Add to Inventory`, your app should display a prompt that will let the manager "add more" of any item currently in the store.
 
   // * If a manager selects `Add New Product`, it should allow the manager to add a completely new product to the store.
@@ -70,14 +66,19 @@ function currentProducts() {
   connection.query('SELECT * FROM products', function(err, results) {
     if (err) throw err;
     for (var i = 0; i < results.length; i++) {
-      console.log('\nproduct id: ' + results[i].id + ' | ' + 'product name: ' + results[i].name + ' | ' + 'department: ' + results[i].department + ' | ' + 'price $' + results[i].price + ' | ' + 'inventory: ' + results[i].stock_quantity);
+      console.log('\nproduct id: ' + results[i].id + ' | ' + 'product name: ' + results[i].name + ' | ' + 'department: ' + results[i].department + ' | ' + 'price $' + results[i].price + ' | ' + 'inventory: ' + results[i].inventory);
     }
   })
   start();
 }
 
 function lowInventory() {
-  console.log('low inventory');
+  connection.query('SELECT * FROM products WHERE inventory <= 5', function(err, results) {
+    if (err) throw err;
+    for (var i = 0; i < results.length; i++) {
+      console.log('\nproduct name: ' + results[i].name + ' | ' + 'inventory: ' + results[i].inventory);
+    }
+  })
   start();
 }
 

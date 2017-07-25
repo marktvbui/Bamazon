@@ -88,6 +88,29 @@ function addInventory() {
 }
 
 function newProducts() {
-  console.log('new products');
-  start();
+  inquirer.prompt([
+    {
+      name: 'name',
+      type: 'input',
+      message: 'What is the name of the new product?'
+    },
+    {
+      name: 'department',
+      type: 'input',
+      message: 'What department does the product belong to?'
+    },
+    {
+      name: 'price',
+      type: 'input',
+      message: 'What is the price of the new product?'
+    },
+    {
+      name: 'inventory',
+      type: 'input',
+      message: 'How much inventory do we have?'
+    }
+    ]).then(function(results){
+      console.log(results);
+      start();
+    })
 }

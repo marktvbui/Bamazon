@@ -24,8 +24,6 @@ connection.connect(function(err) {
 
   // * If a manager selects `Add to Inventory`, your app should display a prompt that will let the manager "add more" of any item currently in the store.
 
-  // * If a manager selects `Add New Product`, it should allow the manager to add a completely new product to the store.
-
 function start(){
   inquirer.prompt
   ([
@@ -83,8 +81,53 @@ function lowInventory() {
 }
 
 function addInventory() {
-  console.log('add inventory');
-  start();
+  connection.query('SELECT * FROM products', function(err, results) {
+    if (err) throw err;
+    inquirer.prompt([
+    {
+      name: 'name',
+      type: 'list',
+      choices: function() {
+        var productsArray = [];
+        for (var i = 0; i < results.length; i++) {
+          productsArray.push(results[i].name);
+        }
+        return productsArray;
+      },
+      message: 'What item would you like to add more inventory to?'
+    },
+    {
+      name: 'quantity',
+      type: 'input',
+      message: 'How much more inventory do we have?',
+      validate: function(value){
+        return !isNaN(value);
+      }
+    }
+    ])
+    .then(function(answer){
+      var chosenProduct;
+      for (var i = 0; i < results.length; i++) {
+        if (results[i].name === answer.name) {
+          chosenProduct = results[i];
+        }
+      }
+    var newInventory = parseInt(answer.quantity) + chosenProduct.inventory;
+    connection.query('UPDATE products SET ? WHERE ?',
+      [
+        {
+          inventory: newInventory
+        },
+        {
+          id: chosenProduct.id
+        }
+      ], function(error) {
+        if (error) throw error;
+        console.log('We have added ' + answer.quantity + '. Bringing our total inventory to ' + newInventory +  ' ' + chosenProduct.name + 's.');
+        start();
+      })
+    })
+  })
 }
 
 function newProducts() {
@@ -102,7 +145,10 @@ function newProducts() {
     {
       name: 'price',
       type: 'input',
-      message: 'What is the price of the new product?'
+      message: 'What is the price of the new product?',
+      validate: function(value){
+        return !isNaN(value);
+      }
     },
     {
       name: 'inventory',

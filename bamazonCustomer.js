@@ -54,20 +54,20 @@ function start() {
             chosenItem = results[i];
           }
         }
-        if (parseInt(answer.quantity) <= chosenItem.stock_quantity) {
+        if (parseInt(answer.quantity) <= chosenItem.inventory) {
           var purchaseQuantity = answer.quantity;
-          var newQuantity = chosenItem.stock_quantity - parseInt(purchaseQuantity);
+          var newQuantity = chosenItem.inventory - parseInt(purchaseQuantity);
           var itemPrice = chosenItem.price;
           connection.query('UPDATE products SET ? WHERE ?',
             [
               {
-                stock_quantity: newQuantity
+                inventory: newQuantity
               },
               {
                 id: chosenItem.id
               }
             ], function(error) {
-              if (error) throw err;
+              if (error) throw error;
               var purchasePrice = purchaseQuantity * chosenItem.price;
               console.log('Today\'s total comes to $' + purchasePrice);
             });
